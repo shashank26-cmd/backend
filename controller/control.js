@@ -1,11 +1,11 @@
 const userModel = require("../model/userSchema.js");
 const emailValidator=require('email-validator');
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 // const jwt=require('jsonwebtoken');
 
 
 const signup=async(req,res,next)=>{
-    const{ name,email,password,confirmPassword }=req.body;
+    const{ name,email,password,confirmPassword }=req.body; // send me this info in req.body
     console.log(name,email,password,confirmPassword);
     if(!name||!email||!password||!confirmPassword){
         return res.status(400).json({
@@ -33,7 +33,7 @@ const signup=async(req,res,next)=>{
 
 try{
     //  kisine   body mai send kiya hai so responsibility to save the data
-        const userInfo=userModel(req.body);
+        const userInfo=userModel(req.body);// instance
         const result=await userInfo.save(); //save data  directly 
         return res.status(200).json({
             success:true,
@@ -75,7 +75,7 @@ message:"Every field is mandatory"
     })
     .select('+password'); // explicitly password mang raha hai
 
- if(!user||!(await bcrypt.compare(password,user.password))){
+ if(!user||!(await bcrypt.compare(password,user.password))){//encypt passs and sadha pass compare
     return res.status(400).json({
         success:false,
         message:"USER DOES NOT EXIST OR PASSWORD DOEST NOT MATCH"
@@ -88,7 +88,7 @@ message:"Every field is mandatory"
 
 // cookie bar bar req leke jata hai uske ander token rhta hai 
 
- const token=user.jwtToken();
+ const token=user.jwtToken();// this is defined at schemma
 
  user.password=undefined;
 
@@ -119,6 +119,7 @@ message:e.message
 const getUser=async(req,res,next)=>{
 const userId=req.user.id;  //user ki info kon dega  and validate kon raha hai login hai ki nhi so we use middleware
 try{
+    // if login hi mera token exist karta hai so info lake dedunga
 const user=await userModel.findById(userId);
 return res.status(200).json({
     success:true,

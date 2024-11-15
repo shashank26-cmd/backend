@@ -1,7 +1,7 @@
 const mongoose=require('mongoose');
 const {Schema}=mongoose;
 const JWT=require('jsonwebtoken');
-const bcrypt=require('bcrypt');
+const bcrypt=require('bcryptjs');
 const userSchema=new Schema({
     name:{
         type:String,
@@ -33,7 +33,11 @@ const userSchema=new Schema({
         timestamps:true,
     }
    );
+
+// pre is middleware
    userSchema.pre('save',async function(next){ //koi save karaha hao toh ek function  trigger hoga
+    
+    // if pass not modified so age but if modify then this.pass wala line
     if (!this.isModified('password')){
         return next();
    }

@@ -1,4 +1,4 @@
-const mongoose=require('mongoose');
+const mongoose=require('mongoose'); //Mongoose is a Node.js library that simplifies working with MongoDB by providing schema enforcement and other helpful features.
 const MONGODB_URL=process.env.MONGODB_URL;
 const DBconnect=()=>{
     mongoose
